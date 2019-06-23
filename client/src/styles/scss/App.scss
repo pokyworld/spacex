@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Raleway:200,300,400,500&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Lato:200,300,400,500&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:200,300,400,500&display=swap');
+
+* { font-family: "Raleway", sans-serif }
+html, body { width: 100%; background-color: #000; }
+#root { width: calc(100vw - 20px); background-color: #000;}
+#root > div { 
+    min-height: 100vh; 
+    padding-bottom: 50px; 
+    background-color: #000; 
+}
+.card-body { padding: 0.75rem; }
+.btn { float: right; }
+
+@media(max-width:800px) {
+    #root { width: 100%; }    
+}
+
+@media(max-width:400px) {
+    .card-header {font-size: 0.5em;}
+    .card-header, h5 { margin: 8px; padding: 0 0 10px 0; }
+}
