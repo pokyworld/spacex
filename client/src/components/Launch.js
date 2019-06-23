@@ -57,17 +57,38 @@ export default class Launch extends Component {
 
                 </ul>
                 <Link to="/" path="/" className="btn btn-secondary text-dark">Return to List</Link>
+                <div className="clearfix"></div>
                 <Query query={LAUNCH_QUERY} variables={{ flight_number }}>
                     {
                         ({ loading, error, data }) => {
                             if (loading) return <h5>Loading...</h5>;
                             if (error) console.log(error);
-
+                            const { launch } = data;
                             return (<Fragment>
                                 {
-                                    // data.launches.map(launch => (
-                                    //     <LaunchItem key={launch.flight_number} launch={launch} />
-                                    // ))
+                                    // data.launche
+                                    <ul style={listGroup} className="list-group">
+                                        <li style={listGroupItem} className="list-group-item"><div style={listItem}>Mission</div><div>{launch.mission_name}</div></li>
+                                        <li style={listGroupItem} className="list-group-item"><div style={listItem}>Flight Number</div><div>{launch.flight_number}</div></li>
+                                        <li style={listGroupItem} className="list-group-item"><div style={listItem}>Launch Date</div><div>{moment(launch.launch_date_utc).format("YYYY-MM-DD HH:mm")}</div></li>
+                                        <li style={listGroupItem} className="list-group-item"><div style={listItem}>Status</div><div className={classNames({
+                                            "text-success": launch.launch_success,
+                                            "text-danger": !launch.launch_success && moment() >= moment(launch.launch_date_utc),
+                                            "text-warning": moment() < moment(launch_date_utc)
+                                        })}>
+                                            {launch.launch_success === true && moment() >= moment(launch.launch_date_utc) && `Successful Launch`}
+                                            {launch.launch_success === null && moment() >= moment(launch.launch_date_utc) && `Failed Launch`}
+                                            {launch.launch_success === false && moment() >= moment(launch.launch_date_utc) && `Failed Launch`}
+                                            {moment() < moment(launch.launch_date_utc) && `Future Launch`}
+                                        </div></li>
+                                        <li style={listGroupItem} className="list-group-item"><div style={listItem}>Rocket Name</div><div>{launch.rocket.rocket_name}</div></li>
+                                        {launch.launch_site &&
+                                            <li style={listGroupItem} className="list-group-item"><div style={listItem}>Launch Site</div><div>{launch.launch_site.site_name_long}</div></li>
+                                        }
+                                        {launch.launch_failure_reason &&
+                                            <li style={listGroupItem} className="list-group-item"><div style={listItem}>Launch Failure</div><div>{`Time: ${launch.launch_failure_reason.time}<br/>Altitude: ${launch.launch_failure_reason.altitude}<br/>Reason: ${launch.launch_failure_reason.reason}<br/>`}</div></li>
+                                        }
+                                    </ul>
                                 }
                             </Fragment>);
                         }
