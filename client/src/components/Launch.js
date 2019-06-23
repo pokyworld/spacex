@@ -1,7 +1,27 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import moment from 'moment';
+
+const LAUNCH_QUERY = gql`
+    query LaunchQuery($flight_number: Int!) {
+        launch(flight_number: $flight_number) { 
+            flight_number,mission_name,launch_year,
+            launch_date_unix,launch_date_utc,launch_success,
+            rocket {
+                rocket_id, rocket_name, rocket_type
+            },
+            launch_site {
+                site_name, site_name_long
+            },
+            launch_failure_reason { 
+                time, altitude, reason
+            } 
+        } 
+    }
+`;
 
 export default class Launch extends Component {
     render() {
@@ -37,6 +57,22 @@ export default class Launch extends Component {
 
                 </ul>
                 <Link to="/" path="/" className="btn btn-secondary text-dark">Return to List</Link>
+                <Query query={LAUNCH_QUERY} variables={{ flight_number }}>
+                    {
+                        ({ loading, error, data }) => {
+                            if (loading) return <h5>Loading...</h5>;
+                            if (error) console.log(error);
+
+                            return (<Fragment>
+                                {
+                                    // data.launches.map(launch => (
+                                    //     <LaunchItem key={launch.flight_number} launch={launch} />
+                                    // ))
+                                }
+                            </Fragment>);
+                        }
+                    }
+                </Query>
             </div>
         )
     }
